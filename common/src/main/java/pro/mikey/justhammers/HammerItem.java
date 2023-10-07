@@ -102,13 +102,16 @@ public class HammerItem extends DiggerItem {
         if (!(livingEntity instanceof ServerPlayer player)) return;
 
         var size = (radius / 2);
-        var offset = size - 1;
+        int offset = (radius == 5) ? size - 1 : 0;
 
         Direction direction = ((BlockHitResult) pick).getDirection();
         var boundingBox = switch (direction) {
-            case DOWN, UP -> new BoundingBox(blockPos.getX() - size, blockPos.getY() - (direction == Direction.UP ? depth - 1 : 0), blockPos.getZ() - size, blockPos.getX() + size, blockPos.getY() + (direction == Direction.DOWN ? depth - 1 : 0), blockPos.getZ() + size);
-            case NORTH, SOUTH -> new BoundingBox(blockPos.getX() - size, blockPos.getY() - size + offset, blockPos.getZ() - (direction == Direction.SOUTH ? depth - 1 : 0), blockPos.getX() + size, blockPos.getY() + size + offset, blockPos.getZ() + (direction == Direction.NORTH ? depth - 1 : 0));
-            case WEST, EAST -> new BoundingBox(blockPos.getX() - (direction == Direction.EAST ? depth - 1 : 0), blockPos.getY() - size + offset, blockPos.getZ() - size, blockPos.getX() + (direction == Direction.WEST ? depth - 1 : 0), blockPos.getY() + size + offset, blockPos.getZ() + size);
+            case DOWN -> new BoundingBox(blockPos.getX() - size, blockPos.getY(), blockPos.getZ() - size, blockPos.getX() + size, blockPos.getY() + depth - 1, blockPos.getZ() + size);
+            case UP -> new BoundingBox(blockPos.getX() - size, blockPos.getY() - depth + 1, blockPos.getZ() - size, blockPos.getX() + size, blockPos.getY(), blockPos.getZ() + size);
+            case SOUTH -> new BoundingBox(blockPos.getX() - size, blockPos.getY() - size + offset, blockPos.getZ() - depth + 1, blockPos.getX() + size, blockPos.getY() + size + offset, blockPos.getZ());
+            case NORTH -> new BoundingBox(blockPos.getX() - size, blockPos.getY() - size + offset, blockPos.getZ(), blockPos.getX() + size, blockPos.getY() + size + offset, blockPos.getZ() + depth - 1);
+            case EAST -> new BoundingBox(blockPos.getX() - depth + 1, blockPos.getY() - size + offset, blockPos.getZ() - size, blockPos.getX(), blockPos.getY() + size + offset, blockPos.getZ() + size);
+            case WEST -> new BoundingBox(blockPos.getX(), blockPos.getY() - size + offset, blockPos.getZ() - size, blockPos.getX() + depth - 1, blockPos.getY() + size + offset, blockPos.getZ() + size);
         };
 
         int damage = 0;
