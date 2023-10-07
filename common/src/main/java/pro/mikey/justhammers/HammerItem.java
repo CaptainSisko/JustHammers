@@ -102,7 +102,7 @@ public class HammerItem extends DiggerItem {
         if (!(livingEntity instanceof ServerPlayer player)) return;
 
         var size = (radius / 2);
-        int offset = (radius == 5) ? size - 1 : 0;
+        var offset = (radius == 5) ? size - 1 : 0;
 
         Direction direction = ((BlockHitResult) pick).getDirection();
         var boundingBox = switch (direction) {
